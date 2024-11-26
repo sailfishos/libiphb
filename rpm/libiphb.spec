@@ -1,9 +1,9 @@
 Name:       libiphb
 Summary:    API for IP Heartbeat service
-Version:    1.2.7
-Release:    0
+Version:    1.2.8
+Release:    1
 License:    LGPLv2+
-URL:        https://git.sailfishos.org/mer-core/libiphb
+URL:        https://github.com/sailfishos/libiphb
 Source0:    %{name}-%{version}.tar.bz2
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -47,17 +47,13 @@ Requires:  %{name} = %{version}-%{release}
 %build
 unset LD_AS_NEEDED
 ./verify_version.sh
-chmod a+x autogen.sh
 ./autogen.sh
-chmod a+x configure
 
 %configure --disable-static
-make %{?_smp_mflags}
+%make_build
 
 %install
-rm -rf %{buildroot}
 %make_install
-rm -f %{buildroot}/%{_libdir}/*.la
 
 mkdir -p %{buildroot}%{_docdir}/%{name}-%{version}
 install -m0644 -t %{buildroot}%{_docdir}/%{name}-%{version} \
@@ -68,20 +64,16 @@ AUTHORS INSTALL README NEWS ChangeLog
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %{_libdir}/libiphb.so.*
 %license COPYING
 
 %files devel
-%defattr(-,root,root,-)
 %attr(644,root,root)%{_includedir}/iphbd/*
 %{_libdir}/libiphb.so
 %{_libdir}/pkgconfig/libiphb.pc
 
 %files tests
-%defattr(-,root,root,-)
 /opt/tests/%{name}-tests
 
 %files doc
-%defattr(-,root,root,-)
 %{_docdir}/%{name}-%{version}
